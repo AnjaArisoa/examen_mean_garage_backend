@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Article = require('../models/Article');
+const { Model } = require('mongoose');
 // Créer un article
 router.post('/', async (req, res) => {
 try {
@@ -30,6 +31,7 @@ router.put('/:id', async (req, res) => {
     }
     });
 // Supprimer un article
+
 router.delete('/:id', async (req, res) => {
     try {
     await Article.findByIdAndDelete(req.params.id);
