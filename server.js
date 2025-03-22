@@ -17,6 +17,7 @@ useUnifiedTopology: true
 .catch(err => console.log(err));
 //ajout routes
 app.use('/articles', require('./routes/articleRoutes'));
+app.use('/services', require('./routes/serviceRoutes'));
 
 app.listen(PORT, () => console.log(`Serveur démarré sur le port
 ${PORT}`));
