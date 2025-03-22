@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const fs = require('fs');
 require('dotenv').config();
 const app = express();
 //maka zavatra ao anaty .env
@@ -16,7 +17,14 @@ useUnifiedTopology: true
 }).then(() => console.log("MongoDB connecté"))
 .catch(err => console.log(err));
 //ajout routes
-app.use('/articles', require('./routes/articleRoutes'));
+const routesPath = path.join(__dirname, 'routes');
+fs.readdirSync(routesPath).forEach(file => {
+  if (file.endsWith('.js')) {
+    const routeName = `/${file.replace('.js', '')}`;
+    app.use(routeName, require(path.join(routesPath, file)));
+    console.log(`Route ${routeName} ajoutée`);
+  }
+});
 
 app.listen(PORT, () => console.log(`Serveur démarré sur le port
 ${PORT}`));
