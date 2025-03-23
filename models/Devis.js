@@ -4,9 +4,9 @@ const DevisSchema = new mongoose.Schema({
     categorieVehicule: { type: mongoose.Schema.Types.ObjectId, ref: 'CategorieVehicule', required: true },
     modeleVehicule: { type: mongoose.Schema.Types.ObjectId, ref: 'ModeleVehicule', required: true },
     marqueVehicule: { type: mongoose.Schema.Types.ObjectId, ref: 'MarqueVehicule', required: true },
-    totalPrix: { type: Number, required: true },
-    nombreMecanicien: { type: Number, required: true },
-    totalHeure: { type: String, required: true } // Stocké comme string HH:MM:SS
+    totalPrix: { type: Number, default: 0 },
+    nombreMecanicien: { type: Number, default: 0 },
+    totalHeure: { type: String, default: "" } // Stocké comme string HH:MM:SS
 }, { timestamps: true });
 
 const Devis = mongoose.model('Devis', DevisSchema);
