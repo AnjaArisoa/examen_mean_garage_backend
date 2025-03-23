@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const fs = require('fs');
+const path=require('path');
 const cors = require('cors');
 require('dotenv').config();
 const app = express();
@@ -15,8 +17,16 @@ useNewUrlParser: true,
 useUnifiedTopology: true
 }).then(() => console.log("MongoDB connecté"))
 .catch(err => console.log(err));
+
 //ajout routes
-app.use('/articles', require('./routes/articleRoutes'));
+const routesPath = path.join(__dirname, 'routes');
+fs.readdirSync(routesPath).forEach(file => {
+  if (file.endsWith('.js')) {
+    const routeName = `/${file.replace('.js', '')}`;
+    app.use(routeName, require(path.join(routesPath, file)));
+    console.log(`Route ${routeName} ajoutée`);
+}
+});
 
 app.listen(PORT, () => console.log(`Serveur démarré sur le port
 ${PORT}`));
