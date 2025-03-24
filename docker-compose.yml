@@ -1,25 +1,19 @@
-version: '3.8'  # Spécifie la version de Docker Compose
-
+version: "3.8"
 services:
-  mongodb:
-    image: mongo:4.4
-    container_name: mongodb
-    restart: always
-    env_file:
-      - .env
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: "${MONGO_INITDB_ROOT_USERNAME}"
-      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_INITDB_ROOT_PASSWORD}"
-    volumes:
-      - mongo_data:/data/db
+  backend:
+    build: .
     ports:
-      - "27017:27017"  # Port par défaut de MongoDB
-    networks:
-      - app-network
+      - "3000:3000"
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/garage
+
+  mongo:
+    image: mongo:6
+    volumes:
+      - mongodb_data:/data/db
+    restart: always
 
 volumes:
-  mongo_data:
-
-networks:
-  app-network:
-    driver: bridge
+  mongodb_data:

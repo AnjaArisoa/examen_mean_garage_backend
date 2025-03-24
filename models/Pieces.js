@@ -8,4 +8,4 @@ const PiecesSchema = new mongoose.Schema({
     prix: { type: Number, required: true }
 }, { timestamps: true });
 
-const Pieces = mongoose.model('Pieces', PiecesSchema);
+module.exports = mongoose.model('Pieces', PiecesSchema);

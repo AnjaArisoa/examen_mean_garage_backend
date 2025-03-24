@@ -4,4 +4,4 @@ const MarqueVehiculeSchema = new mongoose.Schema({
     etat: { type: Number, default: 0 }
 }, { timestamps: true });
 
-const MarqueVehicule = mongoose.model('MarqueVehicule', MarqueVehiculeSchema);
+module.exports = mongoose.model('MarqueVehicule', MarqueVehiculeSchema);
