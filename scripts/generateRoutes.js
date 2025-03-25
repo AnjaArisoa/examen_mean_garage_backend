@@ -3,7 +3,6 @@ const path = require('path');
 const inflection = require('inflection'); // Utilisé pour mettre les noms au pluriel
 const modelsPath = path.join(__dirname, '../models'); // Le chemin vers ton dossier de modèles
 const routesPath = path.join(__dirname, '../routes'); // Le chemin où tu veux générer les fichiers de routes
-
 const modelFiles = fs.readdirSync(modelsPath);
 
 // Fonction pour générer une route pour chaque modèle
