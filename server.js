@@ -27,6 +27,6 @@ fs.readdirSync(routesPath).forEach(file => {
     console.log(`Route ${routeName} ajoutée`);
 }
 });
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.listen(PORT, () => console.log(`Serveur démarré sur le port
 ${PORT}`));
