@@ -2,14 +2,15 @@
 const express = require('express');
 const router = express.Router();
 const Service = require('../models/Service');
+const upload = require("../middlewares/upload"); 
 
 // CRUD pour Service
 
-// Récupérer tous les Services
-router.get('/', async (req, res) => {
+// Récupérer tous les services
+router.get("/", async (req, res) => {
   try {
-    const items = await Service.find();
-    res.json(items);
+    const services = await Service.find();
+    res.json(services);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -35,12 +36,16 @@ router.get('/recherche-service', async (req, res) => {
 
 
 
-// Créer un Service
-router.post('/', async (req, res) => {
-  const newItem = new Service(req.body);
+// Créer un Service avec image
+router.post("/", upload.single("img"), async (req, res) => {
   try {
-    await newItem.save();
-    res.status(201).json(newItem);
+    const { nom, description } = req.body;
+    const imgUrl = req.file ? `/uploads/${req.file.filename}` : "";
+
+    const newService = new Service({ nom, description, img: imgUrl });
+    await newService.save();
+
+    res.status(201).json(newService);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
