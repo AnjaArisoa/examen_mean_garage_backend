@@ -5,6 +5,11 @@ const Stock = require('../models/Stock');
 const Pieces = require('../models/Pieces');
 const ReservationPieces =require("../models/ReservationPieces");
 const DetailDevis =require("../models/DetailPieces");
+const CategorieVehicule =require("../models/CategorieVehicule");
+const ModeleVehicule =require("../models/ModeleVehicule");
+const MarqueVehicule =require("../models/MarqueVehicule");
+const TypeVehicule =require("../models/TypeVehicule");
+const TypeMoteur =require("../models/TypeMoteur");
 
 
 // CRUD pour Stock
@@ -28,108 +33,56 @@ router.get('/recherche-pieces-et-restant', async (req, res) => {
       marqueVehicule,
       categorieVehicule,  
     } = req.query;
-    const pipeline = [
-      {
-        $lookup: {
-          from: 'categorievehicules', // Assurez-vous du nom exact de la collection
-          localField: 'categorieVehicule',
-          foreignField: '_id',
-          as: 'categorieDetails'
-        }
-      },
-      {
-        $lookup: {
-          from: 'typevehicules', // Collection pour les types de véhicules
-          localField: 'categorieDetails.typeVehicule',
-          foreignField: '_id',
-          as: 'typeVehiculeDetails'
-        }
-      },
-      {
-        $lookup: {
-          from: 'typemoteurs', // Collection pour les types de moteurs
-          localField: 'categorieDetails.typeMoteur',
-          foreignField: '_id',
-          as: 'typeMoteurDetails'
-        }
-      },
-      {
-        $lookup: {
-          from: 'modelevehicules',
-          localField: 'modeleVehicule',
-          foreignField: '_id',
-          as: 'modeleDetails'
-        }
-      },
-      {
-        $lookup: {
-          from: 'marquevehicules',
-          localField: 'marqueVehicule',
-          foreignField: '_id',
-          as: 'marqueDetails'
-        }
-      },
-      {
-        $lookup: {
-          from: 'stocks',
-          localField: '_id',
-          foreignField: 'pieces',
-          as: 'stockMovements'
-        }
-      },
-      {
-        $match: {
-          ...(nomPiece && { nomPiece: { $regex: nomPiece, $options: 'i' } }),
-          ...(reference && { reference: { $regex: reference, $options: 'i' } }),
-          ...(modeleVehicule && { modeleVehicule: new mongoose.Types.ObjectId(modeleVehicule) }),
-          ...(marqueVehicule && { marqueVehicule: new mongoose.Types.ObjectId(marqueVehicule) }),
-          ...(categorieVehicule && { categorieVehicule: new mongoose.Types.ObjectId(categorieVehicule) })
-        }
-      },
-      {
-        $addFields: {
-          totalEntree: { $sum: '$stockMovements.entree' },
-          totalSortie: { $sum: '$stockMovements.sortie' },
-          stockDifference: {
-            $subtract: [
-              { $sum: '$stockMovements.entree' },
-              { $sum: '$stockMovements.sortie' }
-            ]
-          },
-          categorieDetails: { $arrayElemAt: ['$categorieDetails', 0] },
-          typeVehiculeDetails: { $arrayElemAt: ['$typeVehiculeDetails', 0] },
-          typeMoteurDetails: { $arrayElemAt: ['$typeMoteurDetails', 0] }
-        }
-      },
-      {
-        $project: {
-          _id: 1,
-          nomPiece: 1,
-          reference: 1,
-          prix: 1,
-          totalEntree: 1,
-          totalSortie: 1,
-          stockDifference: 1,
-          categorieVehicule: 1,
-          modeleVehicule: 1,
-          marqueVehicule: 1,
-          categorieDetails: 1,
-          typeVehiculeDetails: 1,
-          typeMoteurDetails: 1,
-          modeleDetails: { $arrayElemAt: ['$modeleDetails', 0] },
-          marqueDetails: { $arrayElemAt: ['$marqueDetails', 0] }
-        }
-      },
-      { $sort: { nomPiece: 1 } }
-    ];
-    const piecesStockSummary = await Pieces.aggregate(pipeline);
+
+    // Construire le filtre de recherche pour les pièces
+    const filter = {
+      ...(nomPiece && { nomPiece: { $regex: nomPiece, $options: 'i' } }),
+      ...(reference && { reference: { $regex: reference, $options: 'i' } }),
+      ...(modeleVehicule && { modeleVehicule: new mongoose.Types.ObjectId(modeleVehicule) }),
+      ...(marqueVehicule && { marqueVehicule: new mongoose.Types.ObjectId(marqueVehicule) }),
+      ...(categorieVehicule && { categorieVehicule: new mongoose.Types.ObjectId(categorieVehicule) })
+    };
+
+    // Récupérer les pièces
+    const pieces = await Pieces.find(filter);
+
+    // Récupérer les détails associés pour chaque pièce
+    const piecesWithDetails = await Promise.all(
+      pieces.map(async (piece) => {
+        const categorieDetails = await CategorieVehicule.findById(piece.categorieVehicule);
+        const typeVehiculeDetails = categorieDetails ? await TypeVehicule.findById(categorieDetails.typeVehicule) : null;
+        const typeMoteurDetails = categorieDetails ? await TypeMoteur.findById(categorieDetails.typeMoteur) : null;
+        const modeleDetails = await ModeleVehicule.findById(piece.modeleVehicule);
+        const marqueDetails = await MarqueVehicule.findById(piece.marqueVehicule);
+        
+        // Récupérer les mouvements de stock
+        const stockMovements = await Stock.find({ pieces: piece._id });
+        const totalEntree = stockMovements.reduce((sum, stock) => sum + stock.entree, 0);
+        const totalSortie = stockMovements.reduce((sum, stock) => sum + stock.sortie, 0);
+        const stockDifference = totalEntree - totalSortie;
+
+        return {
+          ...piece.toObject(),
+          totalEntree,
+          totalSortie,
+          stockDifference,
+          categorieDetails,
+          typeVehiculeDetails,
+          typeMoteurDetails,
+          modeleDetails,
+          marqueDetails
+        };
+      })
+    );
+
     res.status(200).json({
       success: true,
-      count: piecesStockSummary.length,
-      data: piecesStockSummary
+      count: piecesWithDetails.length,
+      data: piecesWithDetails
     });
+
   } catch (error) {
-    console.error('Erreur lors de la récupération du sommaire des stocks:', error);
+    console.error('Erreur lors de la récupération des pièces et du stock:', error);
     res.status(500).json({
       success: false,
       message: 'Erreur serveur lors de la recherche des stocks',
@@ -137,6 +90,7 @@ router.get('/recherche-pieces-et-restant', async (req, res) => {
     });
   }
 });
+
 
 
 async function checkResteStock(pieceId) {
