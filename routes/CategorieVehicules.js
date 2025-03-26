@@ -8,7 +8,10 @@ const CategorieVehicule = require('../models/CategorieVehicule');
 // Récupérer tous les CategorieVehicules
 router.get('/', async (req, res) => {
   try {
-    const items = await CategorieVehicule.find();
+    const items = await CategorieVehicule.find()
+    .populate("typeVehicule")
+    .populate("typeMoteur")
+    .exec();
     res.json(items);
   } catch (err) {
     res.status(500).json({ message: err.message });
