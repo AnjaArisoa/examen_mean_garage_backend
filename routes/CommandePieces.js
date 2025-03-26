@@ -14,7 +14,14 @@ router.get('/', async (req, res) => {
     .populate({
       path: 'pieces',
       populate: [
-        { path: 'categorieVehicule', model: 'CategorieVehicule' },
+        { 
+          path: 'categorieVehicule', 
+          model: 'CategorieVehicule',
+          populate: [
+            { path: 'typeVehicule', model: 'TypeVehicule' },
+            { path: 'typeMoteur', model: 'TypeMoteur' }
+          ]
+        },
         { path: 'modeleVehicule', model: 'ModeleVehicule' },
         { path: 'marqueVehicule', model: 'MarqueVehicule' }
       ]
