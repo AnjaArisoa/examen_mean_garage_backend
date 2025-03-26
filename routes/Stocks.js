@@ -35,7 +35,7 @@ router.get('/recherche-pieces-et-restant', async (req, res) => {
       // Étape de jointure avec les collections référencées
       {
         $lookup: {
-          from: 'categoriевehicules',
+          from: 'categoriеVehicules',
           localField: 'categorieVehicule',
           foreignField: '_id',
           as: 'categorieDetails'

@@ -10,12 +10,22 @@ const ReservationPieces=require('../models/ReservationPieces')
 
 router.get('/', async (req, res) => {
   try {
-    const items = await CommandePieces.find({ nombre: { $gt: 0 } });
+    const items = await CommandePieces.find({ nombre: { $gt: 0 } })
+    .populate({
+      path: 'pieces',
+      populate: [
+        { path: 'categorieVehicule', model: 'CategorieVehicule' },
+        { path: 'modeleVehicule', model: 'ModeleVehicule' },
+        { path: 'marqueVehicule', model: 'MarqueVehicule' }
+      ]
+    })
+    .exec();
     res.json(items);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 async function getcommandePieces(id) {
   try{
     const items=await CommandePieces.findById(id);
