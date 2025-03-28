@@ -47,6 +47,22 @@ router.delete('/:id', async (req, res) => {
 });
 
 
+//get last
+router.get('/last/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    // Récupérer le dernier devis de l'utilisateur
+    const lastDevis = await Devis.findOne({ utilisateur: userId })
+      .sort({ createdAt: -1 }) // Trier par date décroissante (du plus récent au plus ancien)
+    if (!lastDevis) {
+      return res.status(404).json({ message: "Aucun devis trouvé pour cet utilisateur." });
+    }
+    res.json(lastDevis);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 
 

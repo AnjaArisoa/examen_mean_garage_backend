@@ -8,4 +8,4 @@ const DevisSchema = new mongoose.Schema({
     totalHeure: { type: Number, default: 0 } // Stocké comme string HH:MM:SS
 }, { timestamps: true });
 
-const Devis = mongoose.model('Devis', DevisSchema);
+module.exports = mongoose.model('Devis', DevisSchema);  
