@@ -42,9 +42,12 @@ router.get('/recherche-pieces-et-restant', async (req, res) => {
       ...(marqueVehicule && { marqueVehicule: new mongoose.Types.ObjectId(marqueVehicule) }),
       ...(categorieVehicule && { categorieVehicule: new mongoose.Types.ObjectId(categorieVehicule) })
     };
+    console.log('Filtre de recherche:', filter);
 
     // Récupérer les pièces
     const pieces = await Pieces.find(filter);
+
+    console.log('Pièces trouvées:', pieces);
 
     // Récupérer les détails associés pour chaque pièce
     const piecesWithDetails = await Promise.all(
