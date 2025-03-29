@@ -38,6 +38,14 @@ router.put('/:id', async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
+router.get('/getByCategorie/:id', async (req, res) => {
+  try {
+    const updatedItem = await CategorieVehicule.findById(req.params.id);
+    res.json(updatedItem);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
 
 // Supprimer un CategorieVehicule
 router.delete('/:id', async (req, res) => {
