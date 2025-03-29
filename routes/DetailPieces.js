@@ -45,5 +45,23 @@ router.delete('/:id', async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
+router.get('/getByDevis/:id', async (req, res) => {
+  try {
+    const items = await DetailPieces.find({ devis: req.params.id });
+    if (items.length === 0) {
+      return res.status(404).json({ message: "Aucun détail de devis trouvé pour ce devis" });
+    }
+    const totals = items.reduce((acc, item) => {
+      acc.totalPrixTache += item.prixTache || 0;  
+      acc.totalDureTache += item.dureTache || 0; 
+      return acc;
+    }, { totalPrixTache: 0, totalDureTache: 0 });
+    res.json(totals);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
 
 module.exports = router;

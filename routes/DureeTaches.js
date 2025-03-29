@@ -15,6 +15,18 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/getByTache/:id', async (req, res) => {
+  try {
+    const item = await DureeTache.findOne({ _idtache: req.params.id });
+    if (!item) {
+      return res.status(404).json({ message: "Tâche non trouvée" });
+    }
+    res.json(item);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Créer un DureeTache
 router.post('/', async (req, res) => {
   const newItem = new DureeTache(req.body);
