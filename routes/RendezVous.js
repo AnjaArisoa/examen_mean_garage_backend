@@ -147,7 +147,7 @@ async function checkMecaEtHeureRDV(nbrMecaDispo, nbrDemande, dateRdv, heureDebut
     const creneauxDisponibles = await findCreneauxDisponibles(dateRdv, heureDebut, heureFin, nbrDemande, 3);
     return { 
       disponible: false, 
-      message: "Pas assez de mécaniciens, voici les créneaux disponibles.",
+      message: "Pas assez de mécaniciens, voici quelques suggestions.",
       creneau:creneauxDisponibles
     };
 
