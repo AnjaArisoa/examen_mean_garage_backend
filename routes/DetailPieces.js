@@ -61,6 +61,15 @@ router.get('/getByDevis/:id', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+router.get('/getByDetailDevis/:id', async (req, res) => {
+  try {
+    const items = await DetailPieces.find({ devis: req.params.id }); // Récupère tous les documents où devis = id 
+    res.json(items); // Renvoie la liste des items trouvés
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 // Récupérer les détails d'un devis par son ID et joindre les taches et pièces
 router.get('/detaildevis/:devisId', async (req, res) => {

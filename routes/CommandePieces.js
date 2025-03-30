@@ -133,9 +133,18 @@ async function reservePieces(data){
 }
 async function reservationPiecesbyid(id){
   
-    const deletedItem = await ReservationPieces.findById(id);
-    return deletedItem;
-    
+  const deletedItem = await ReservationPieces.findById(id);
+  return deletedItem;
+  
 };
+router.post('/reservationpieces', async (req, res) => {
+  try {
+    const newItem = await reservePieces(req.body);
+    res.status(201).json(newItem);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
 
 module.exports = router;

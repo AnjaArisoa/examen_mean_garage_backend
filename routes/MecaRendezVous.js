@@ -15,6 +15,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+
 // Créer un MecaRendezVous
 router.post('/', async (req, res) => {
   const newItem = new MecaRendezVous(req.body);
