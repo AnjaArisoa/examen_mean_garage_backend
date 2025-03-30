@@ -92,6 +92,7 @@ router.get("/services-taches", async (req, res) => {
             name: t.nom,
             description: t.description,
             prix: t.prix,
+            nombremeca: t.nombremeca,
             selected: false, // Par défaut non sélectionné
           })),
         };

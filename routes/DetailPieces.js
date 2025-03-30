@@ -62,6 +62,26 @@ router.get('/getByDevis/:id', async (req, res) => {
   }
 });
 
+// Récupérer les détails d'un devis par son ID et joindre les taches et pièces
+router.get('/detaildevis/:devisId', async (req, res) => {
+  try {
+      const { devisId } = req.params;
+
+      const details = await DetailPieces.find({ devis: devisId })
+          .populate('tache')  // Jointure avec Tache
+          .populate('pieces') // Jointure avec Pieces
+          .populate('devis'); // Jointure avec devis
+
+      if (!details || details.length === 0) {
+          return res.status(404).json({ message: "Aucun détail trouvé pour ce devis." });
+      }
+
+      res.status(200).json(details);
+  } catch (error) {
+      res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
 
 
 module.exports = router;
