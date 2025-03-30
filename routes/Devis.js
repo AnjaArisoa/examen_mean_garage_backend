@@ -14,6 +14,15 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+//get devis par id
+router.get('/getDevis/:id', async (req, res) => {
+  try {
+    const items = await Devis.findById(req.params.id);
+    res.json(items);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // Créer un Devis
 router.post('/', async (req, res) => {
