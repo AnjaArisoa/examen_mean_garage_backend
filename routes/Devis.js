@@ -72,6 +72,47 @@ router.get('/last/:userId', async (req, res) => {
   }
 });
 
+router.get('/revenue', async (req, res) => {
+  try {
+    let { annee } = req.query;
+ 
+    if (!annee || isNaN(annee)) {
+      return res.status(400).json({ message: "Année invalide ou manquante" });
+    }
+
+    annee = parseInt(annee, 10); 
+
+    const startOfYear = new Date(annee, 0, 1);
+    const endOfYear = new Date(annee + 1, 0, 1); 
+
+    const revenueByMonth = await Devis.aggregate([
+      {
+        $match: { createdAt: { $gte: startOfYear, $lt: endOfYear } } 
+      },
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          totalRevenue: { $sum: "$totalPrix" } 
+        }
+      },
+      { $sort: { "_id": 1 } } 
+    ]);
+
+    // Générer un tableau de 12 mois avec 0 par défaut
+    const monthlyRevenue = Array(12).fill(0);
+    revenueByMonth.forEach(({ _id, totalRevenue }) => {
+      monthlyRevenue[_id - 1] = totalRevenue; 
+    });
+
+    res.json(monthlyRevenue);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+
 
 
 
