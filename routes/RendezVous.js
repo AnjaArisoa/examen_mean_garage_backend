@@ -147,7 +147,7 @@ async function checkMecaEtHeureRDV(nbrMecaDispo, nbrDemande, dateRdv, heureDebut
     const creneauxDisponibles = await findCreneauxDisponibles(dateRdv, heureDebut, heureFin, nbrDemande, 3);
     return { 
       disponible: false, 
-      message: "Pas assez de mécaniciens, voici les créneaux disponibles.",
+      message: "Pas assez de mécaniciens, voici quelques suggestions.",
       creneau:creneauxDisponibles
     };
 
@@ -416,7 +416,6 @@ router.get('/last/:userId', async (req, res) => {
   }
 });
 
-
 // Route pour obtenir les rendez-vous par utilisateur avec populate de l'ID Devis
 router.get('/getRendezVousByUtilisateur/:utilisateurId', async (req, res) => {
   try {
@@ -435,4 +434,62 @@ router.get('/getRendezVousByUtilisateur/:utilisateurId', async (req, res) => {
   }
 });
 
+router.get('/rendezvous', async (req, res) => {
+  try {
+    let { date } = req.query;
+    let targetDate = date ? new Date(date) : new Date();
+    targetDate.setHours(0, 0, 0, 0); // Début de la journée
+
+    let endDate = new Date(targetDate); // Copier targetDate
+    endDate.setHours(23, 59, 59, 999); // Fin de la journée
+
+    const rdvs = await RendezVous.find({
+      daterdv: { $gte: targetDate, $lte: endDate }
+    }).populate('_idUtilisateur');
+
+    res.json(rdvs);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+async function getRdvWithMechanics(rdvId) {
+  try {
+    const rdv = await RendezVous.findById(rdvId).populate('_idUtilisateur', 'nom');
+    if (!rdv) {
+      throw new Error('Rendez-vous non trouvé');
+    }
+    const mecaRdv = await Mecarendezvous.find({ _idrendezvous: rdvId }).populate('_idUtilisateur', 'nom');
+
+    return {
+      rendezvous: {
+        id: rdv._id,
+        nomUtilisateur: rdv._idUtilisateur.nom,
+        matriculation: rdv.matriculation,
+        daterdv: rdv.daterdv,
+        heuredebut: rdv.heuredebut,
+        heurefin: rdv.heurefin
+      },
+      mecaniciens: mecaRdv.map(meca => ({
+        id: meca._idUtilisateur._id,
+        nom: meca._idUtilisateur.nom
+      }))
+    };
+  } catch (error) {
+    console.error('Erreur lors de la récupération du rendez-vous :', error);
+    return null;
+  }
+}
+router.get('/rendezvous/:id', async (req, res) => {
+  try {
+    const rdvs = await getRdvWithMechanics(req.params.id); // Appelle la fonction directement
+    if (!rdvs) {
+      return res.status(404).json({ message: 'Rendez-vous non trouvé' });
+    }
+    res.json(rdvs);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 module.exports = router;
