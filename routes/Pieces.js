@@ -4,6 +4,7 @@ const router = express.Router();
 const Pieces = require('../models/Pieces');
 const CategorieVehicule = require('../models/CategorieVehicule');
 const TachePieces = require('../models/TachePieces');
+const ReservationPieces = require('../models/ReservationPieces');
 const mongoose = require('mongoose');
 
 
@@ -211,5 +212,36 @@ router.get('/getPiecesForTache', async (req, res) => {
 });
 
 
+//get pieces reserver by id rdv
+router.get('/pieces-by-rdv/:rdvId', async (req, res) => {
+  try {
+      // Récupérer l'ID du rendez-vous depuis l'URL
+      const rdvId = req.params.rdvId;
 
+      // Effectuer la recherche des ReservationPieces en filtrant par _rdv
+      const reservationPieces = await ReservationPieces.find({ _rdv: rdvId }).populate('pieces'); // Utilisation de populate pour remplir les informations de "pieces"
+
+      if (!reservationPieces || reservationPieces.length === 0) {
+          return res.status(404).json({ message: 'Aucune pièce trouvée pour ce rendez-vous.' });
+      }
+
+      // Retourner les résultats
+      return res.json(reservationPieces);
+  } catch (error) {
+      console.error('Erreur lors de la récupération des pièces :', error);
+      return res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
+
+
+//delete reservation
+router.delete('/reservation-pieces/:rdvId', async (req, res) => {
+  try {
+      const { rdvId } = req.params;
+      const result = await ReservationPieces.deleteMany({ _rdv: rdvId });
+      res.json({ success: true, message: `${result.deletedCount} réservations supprimées.` });
+  } catch (error) {
+      res.status(500).json({ success: false, message: "Erreur lors de la suppression des réservations.", error });
+  }
+});
 module.exports = router;

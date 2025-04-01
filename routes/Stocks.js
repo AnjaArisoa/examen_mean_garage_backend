@@ -282,6 +282,29 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+
+//get stock by idpiece
+router.get('/getStockByPiece/:pieceId', async (req, res) => {
+  try {
+    const { pieceId } = req.params;
+
+    // Recherche des rendez-vous associés à l'utilisateur avec un populate sur _idDevis
+    const stocks = await Stock.find({ "pieces": pieceId });
+
+    if (!stocks || stocks.length === 0) {
+      return res.status(404).json({ message: "Aucun rendez-vous trouvé pour cet utilisateur." });
+    }
+
+    return res.status(200).json(stocks);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+
+
+//add sortie
+
 module.exports = router;
 
 

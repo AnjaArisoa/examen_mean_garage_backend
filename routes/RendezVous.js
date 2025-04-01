@@ -415,4 +415,24 @@ router.get('/last/:userId', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+
+// Route pour obtenir les rendez-vous par utilisateur avec populate de l'ID Devis
+router.get('/getRendezVousByUtilisateur/:utilisateurId', async (req, res) => {
+  try {
+    const { utilisateurId } = req.params;
+
+    // Recherche des rendez-vous associés à l'utilisateur avec un populate sur _idDevis
+    const rendezVous = await RendezVous.find({ "_idUtilisateur": utilisateurId });
+
+    if (!rendezVous || rendezVous.length === 0) {
+      return res.status(404).json({ message: "Aucun rendez-vous trouvé pour cet utilisateur." });
+    }
+
+    return res.status(200).json(rendezVous);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
 module.exports = router;
