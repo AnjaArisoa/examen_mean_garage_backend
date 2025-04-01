@@ -415,20 +415,25 @@ router.get('/last/:userId', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-router.get('/last/:userId', async (req, res) => {
+
+// Route pour obtenir les rendez-vous par utilisateur avec populate de l'ID Devis
+router.get('/getRendezVousByUtilisateur/:utilisateurId', async (req, res) => {
   try {
-    const userId = req.params.userId;
-    // Récupérer le dernier devis de l'utilisateur
-    const lastDevis = await RendezVous.findOne({ _idUtilisateur: userId })
-      .sort({ createdAt: -1 }) // Trier par date décroissante (du plus récent au plus ancien)
-    if (!lastDevis) {
-      return res.status(404).json({ message: "Aucun devis trouvé pour cet utilisateur." });
+    const { utilisateurId } = req.params;
+
+    // Recherche des rendez-vous associés à l'utilisateur avec un populate sur _idDevis
+    const rendezVous = await RendezVous.find({ "_idUtilisateur": utilisateurId });
+
+    if (!rendezVous || rendezVous.length === 0) {
+      return res.status(404).json({ message: "Aucun rendez-vous trouvé pour cet utilisateur." });
     }
-    res.json(lastDevis);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+
+    return res.status(200).json(rendezVous);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 });
+
 router.get('/rendezvous', async (req, res) => {
   try {
     let { date } = req.query;
@@ -487,7 +492,4 @@ router.get('/rendezvous/:id', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
-
-
 module.exports = router;
