@@ -246,21 +246,20 @@ router.get('/getAllTacheAndPieceTerminer/:devisId', async (req, res) => {
   }
 });
 
-
-router.put('/updatetache/:tacheId', async (req, res) => {
+router.put('/updatetache/:tacheId/:iddevis', async (req, res) => {
   try {
-    const { tacheId } = req.params;
+    const { tacheId, iddevis } = req.params;
     const { etat } = req.body;  // Assure-toi que l'état est envoyé dans le corps de la requête
 
     const result = await DetailPieces.updateMany(
-      { 'tache': tacheId },  // Chercher les détails avec le tacheId
-      { $set: { etat: etat } }  // Met à jour l'état avec l'état passé depuis le client
+      { 'tache': tacheId, 'devis': iddevis },  // Filtre aussi par iddevis
+      { $set: { etat: etat } }  // Met à jour l'état avec la valeur reçue
     );
 
     if (result.modifiedCount > 0) {
-      return res.status(200).json({ message: `L'état des détails de devis pour la tâche ${tacheId} a été mis à jour.` });
+      return res.status(200).json({ message: `L'état des détails de devis pour la tâche ${tacheId} et le devis ${iddevis} a été mis à jour.` });
     } else {
-      return res.status(404).json({ message: "Aucun détail de devis trouvé avec cette tâche." });
+      return res.status(404).json({ message: "Aucun détail de devis trouvé avec cette tâche et ce devis." });
     }
   } catch (error) {
     res.status(500).json({ message: "Erreur serveur", error: error.message });
