@@ -1,0 +1,245 @@
+//services
+{
+    "nom": "Révision Générale",
+    "description": "Service complet de révision pour assurer la performance optimale du moteur et des autres systèmes du véhicule."
+},
+{
+    "nom": "Diagnostic",
+    "description": "Service d'analyse électronique complet du véhicule pour identifier d'éventuelles pannes ou dysfonctionnements dans les systèmes moteur, transmission, freinage et autres composants électroniques."
+},
+{
+    "nom": "Remplacement de l'Embrayage",
+    "description": "Intervention pour le remplacement du disque, du mécanisme et de la butée d’embrayage ainsi que la dépose de la boîte de vitesses."
+},
+{
+    "nom": "Système de Refroidissement",
+    "description": "Réparation et entretien du système de refroidissement du moteur, incluant le remplacement du radiateur et du liquide de refroidissement."
+},
+{
+    "nom": "Pneumatiques",
+    "description": "Service de remplacement des pneus et d'alignement des roues pour garantir une conduite sécuritaire et un confort optimal."
+}
+
+//taches
+{
+    "_idService": "67e3b7bb2cd00e7496000b69",
+    "nom": "Vidange moteur",
+    "description": "Remplacement de l'huile moteur pour garantir un fonctionnement optimal.",
+    "prix": 50
+},
+{
+    "_idService": "67e3b7bb2cd00e7496000b69",
+    "nom": "Remplacement du filtre",
+    "description": "Changement du filtre à huile pour assurer un bon fonctionnement du moteur.",
+    "prix": 30
+},
+{
+    "_idService": "67e3b7bb2cd00e7496000b69",
+    "nom": "Vérification des freins",
+    "description": "Inspection des plaquettes et disques de frein pour garantir la sécurité du véhicule.",
+    "prix": 70
+},
+{
+    "_idService": "67e3b7bb2cd00e7496000b69",
+    "nom": "Diagnostic électronique",
+    "description": "Examen des systèmes électroniques du véhicule pour détecter les erreurs ou défauts.",
+    "prix": 80
+},
+{
+    "_idService": "67e3b7e12cd00e7496000b6e",
+    "nom": "Dépose de la boîte de vitesses",
+    "description": "Retrait de la boîte de vitesses pour accéder à l'embrayage.",
+    "prix": 100
+},
+{
+    "_idService": "67e3b7e12cd00e7496000b6e",
+    "nom": "Remplacement du disque",
+    "description": "Remplacement du disque d'embrayage.",
+    "prix": 150
+},
+{
+    "_idService": "67e3b7e12cd00e7496000b6e",
+    "nom": "Remplacement du mécanisme",
+    "description": "Changement du mécanisme d'embrayage pour assurer une bonne transmission.",
+    "prix": 120
+},
+{
+    "_idService": "67e3b7e12cd00e7496000b6e",
+    "nom": "Remplacement de la butée",
+    "description": "Remplacement de la butée d'embrayage pour un fonctionnement optimal.",
+    "prix": 90
+},
+{
+    "_idService": "67e3b7fa2cd00e7496000b70",
+    "nom": "Remplacement du radiateur",
+    "description": "Changement du radiateur moteur pour garantir un refroidissement efficace.",
+    "prix": 200
+},
+{
+    "_idService": "67e3b7fa2cd00e7496000b70",
+    "nom": "Remplacement du liquide",
+    "description": "Vidange et remplacement du liquide de refroidissement.",
+    "prix": 50
+},
+{
+    "_idService": "67e3b7fa2cd00e7496000b70",
+    "nom": "Vérification de la pompe",
+    "description": "Inspection de la pompe à eau pour vérifier son bon fonctionnement.",
+    "prix": 60
+},
+{
+    "_idService": "67e3b7fa2cd00e7496000b70",
+    "nom": "Remplacement du thermostat",
+    "description": "Changement du thermostat pour réguler la température du moteur.",
+    "prix": 70
+},
+{
+    "_idService": "67e3b8012cd00e7496000b72",
+    "nom": "Remplacement des pneus",
+    "description": "Changement des pneus pour assurer la sécurité du véhicule.",
+    "prix": 300
+},
+{
+    "_idService": "67e3b8012cd00e7496000b72",
+    "nom": "Équilibrage",
+    "description": "Équilibrage des pneus pour une conduite plus stable.",
+    "prix": 40
+},
+{
+    "_idService": "67e3b8012cd00e7496000b72",
+    "nom": "Géométrie & alignement",
+    "description": "Alignement des roues pour optimiser la conduite et réduire l'usure des pneus.",
+    "prix": 60
+},
+{
+    "_idService": "67e3b8472cd00e7496000b74",
+    "nom": "Diagnostic",
+    "description": "Analyse électronique complète du véhicule pour détecter les pannes et dysfonctionnements.",
+    "prix": 80
+}
+  
+
+//majoration
+{
+    "pourcentage": 15
+}
+//reduction
+{
+    "reduction": 10
+}
+//pieces
+[
+    {
+      "nomPiece": "Huile moteur",
+      "reference": "HO12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 120
+    },
+    {
+      "nomPiece": "Filtre à huile",
+      "reference": "FO12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 45
+    },
+    {
+      "nomPiece": "Plaquettes de frein",
+      "reference": "PB12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 85
+    },
+    {
+      "nomPiece": "Disques de frein",
+      "reference": "DF12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 150
+    },
+    {
+      "nomPiece": "Liquide de frein",
+      "reference": "LF12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 35
+    },
+    {
+      "nomPiece": "Disque d’embrayage",
+      "reference": "DE12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 200
+    },
+    {
+      "nomPiece": "Mécanisme d’embrayage",
+      "reference": "ME12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 350
+    },
+    {
+      "nomPiece": "Butée d’embrayage",
+      "reference": "BE12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 50
+    },
+    {
+      "nomPiece": "Radiateur moteur",
+      "reference": "RM12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 450
+    },
+    {
+      "nomPiece": "Liquide de refroidissement",
+      "reference": "LR12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 25
+    },
+    {
+      "nomPiece": "Pompe à eau",
+      "reference": "PE12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 150
+    },
+    {
+      "nomPiece": "Thermostat",
+      "reference": "TH12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 60
+    },
+    {
+      "nomPiece": "Pneus neufs",
+      "reference": "PN12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 100
+    },
+    {
+      "nomPiece": "Plombs d’équilibrage",
+      "reference": "PE12345",
+      "categorieVehicule": "67e15154103883edca382fec",
+      "marqueVehicule": "67e14e3ec1705c32437f6ca6",
+      "modeleVehicule": "67e14fa5103883edca382fd1",
+      "prix": 15
+    }
+  ]
+  

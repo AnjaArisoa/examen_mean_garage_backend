@@ -8,7 +8,10 @@ const CategorieVehicule = require('../models/CategorieVehicule');
 // Récupérer tous les CategorieVehicules
 router.get('/', async (req, res) => {
   try {
-    const items = await CategorieVehicule.find();
+    const items = await CategorieVehicule.find()
+    .populate("typeVehicule")
+    .populate("typeMoteur")
+    .exec();
     res.json(items);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -30,6 +33,14 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const updatedItem = await CategorieVehicule.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updatedItem);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+router.get('/getByCategorie/:id', async (req, res) => {
+  try {
+    const updatedItem = await CategorieVehicule.findById(req.params.id);
     res.json(updatedItem);
   } catch (err) {
     res.status(400).json({ message: err.message });

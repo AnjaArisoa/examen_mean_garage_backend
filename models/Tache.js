@@ -5,6 +5,7 @@ const TacheSchema = new mongoose.Schema(
     nom: { type: String, required: true },
     description: { type: String, required: true },
     prix: { type: Number, required: true },
+    nombremeca: { type: Number, required: true },
     etat: { type: Number, default: 0 } 
   },
   { timestamps: true }
