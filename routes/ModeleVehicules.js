@@ -14,6 +14,14 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+router.get('/:idCategorie', async (req, res) => {
+  try {
+    const items = await ModeleVehicule.find({categorieVehicule:req.params.idCategorie});
+    res.json(items);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // Créer un ModeleVehicule
 router.post('/', async (req, res) => {
