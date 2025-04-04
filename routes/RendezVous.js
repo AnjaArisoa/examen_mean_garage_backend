@@ -24,9 +24,9 @@ router.get('/', async (req, res) => {
 async function getMecaniciensForRdv(mecanicienId) {
   try {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); 
+    today.setHours(0, 0, 0, 0);
     const rdvs = await RendezVous.find({
-      daterdv: { $gte: today } 
+      daterdv: { $gte: today }
     });
 
     if (rdvs.length === 0) {
@@ -35,7 +35,7 @@ async function getMecaniciensForRdv(mecanicienId) {
     const rdvIds = rdvs.map(rdv => rdv._id);
     const mecanicienRdv = await Mecarendezvous.find({
       _idrendezvous: { $in: rdvIds },
-      _idUtilisateur: mecanicienId 
+      _idUtilisateur: mecanicienId
     });
 
     if (mecanicienRdv.length === 0) {
@@ -66,9 +66,9 @@ async function getAvailableMecaniciens(dateRdv, heureDebut, heureFin) {
   try {
     // Recherche des RDVs déjà existants pour la date et l'heure demandées
     const rdvsOccupes = await RendezVous.find({
-      daterdv: dateRdv, 
+      daterdv: dateRdv,
       $or: [
-        { heuredebut: { $lt: heureFin }, heurefin: { $gt: heureDebut } } 
+        { heuredebut: { $lt: heureFin }, heurefin: { $gt: heureDebut } }
       ]
     });
 
@@ -103,12 +103,12 @@ async function getAvailableMecaniciens(dateRdv, heureDebut, heureFin) {
 
 
 //check si a la date et heure le rdv et libre
-async function checkDateetHeureDispo(dateRdv, heureDebut, heureFin){
+async function checkDateetHeureDispo(dateRdv, heureDebut, heureFin) {
   try {
     const rdvsOccupes = await RendezVous.find({
-      daterdv: dateRdv, 
+      daterdv: dateRdv,
       $or: [
-        { heuredebut: { $lt: heureFin }, heurefin: { $gt: heureDebut } } 
+        { heuredebut: { $lt: heureFin }, heurefin: { $gt: heureDebut } }
       ]
     });
     return rdvsOccupes;
@@ -135,20 +135,20 @@ async function checkMecaEtHeureRDV(nbrMecaDispo, nbrDemande, dateRdv, heureDebut
   try {
     const check = await checkDateetHeureDispo(dateRdv, heureDebut, heureFin);
 
-    if (nbrMecaDispo >= nbrDemande ) {
-      if(check===0){
+    if (nbrMecaDispo >= nbrDemande) {
+      if (check === 0) {
         return { disponible: true, message: "Assez de mécaniciens disponibles." };
       }
-      else{
+      else {
         return { disponible: true, message: "Assez de mécaniciens disponibles." };
       }
     }
     // Sinon, on trouve les 3 premiers créneaux qui respectent la durée demandée
     const creneauxDisponibles = await findCreneauxDisponibles(dateRdv, heureDebut, heureFin, nbrDemande, 3);
-    return { 
-      disponible: false, 
+    return {
+      disponible: false,
       message: "Pas assez de mécaniciens, voici quelques suggestions.",
-      creneau:creneauxDisponibles
+      creneau: creneauxDisponibles
     };
 
   } catch (err) {
@@ -167,15 +167,15 @@ async function findCreneauxDisponibles(dateRdv, heureDebut, heureFin, nbrDemande
 
     let creneauxPossibles = [];
 
-    for (let i = 0; i < maxJours; i++) {  
+    for (let i = 0; i < maxJours; i++) {
       let heureActuelle = heureDebutJournee;
       //console.log(`🔍 Recherche des créneaux pour le ${date.toISOString().split("T")[0]}`);
 
       // Récupérer les RDVs existants pour ce jour (corrigé)
       const rdvsExistants = await RendezVous.find({
-        daterdv: { 
-          $gte: new Date(date.setHours(0, 0, 0, 0)), 
-          $lt: new Date(date.setHours(23, 59, 59, 999)) 
+        daterdv: {
+          $gte: new Date(date.setHours(0, 0, 0, 0)),
+          $lt: new Date(date.setHours(23, 59, 59, 999))
         }
       });
 
@@ -256,11 +256,11 @@ async function checkAndReservePieces(idDevis, detailsDevis) {
   try {
     let stockInsuffisant = false;
     const piecesInsuffisantes = []; // Tableau pour stocker les pièces avec stock insuffisant
-    
+
     // Vérifier le stock pour chaque pièce
     for (const piece of detailsDevis) {
       const { pieces, nombrePieces } = piece;
-      const stockCheck = await checkResteStock(piece.pieces);     
+      const stockCheck = await checkResteStock(piece.pieces);
       if (stockCheck.stockRestant < nombrePieces) {
         console.log(`Stock insuffisant pour la pièce ${pieces.pieces}`);
         piecesInsuffisantes.push({
@@ -490,6 +490,24 @@ router.get('/rendezvous/:id', async (req, res) => {
     res.json(rdvs);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+});
+
+
+// GET /rendezvous/:id - Récupérer un rendez-vous par ID
+router.get('/:id', async (req, res) => {
+  try {
+    const rendezvous = await RendezVous.findById(req.params.id)
+      .populate('_idUtilisateur')
+      .populate('_idDevis');
+
+    if (!rendezvous) {
+      return res.status(404).json({ message: 'Rendez-vous non trouvé.' });
+    }
+
+    res.json(rendezvous);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur.', error });
   }
 });
 module.exports = router;
