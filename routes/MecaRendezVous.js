@@ -142,6 +142,7 @@ router.get('/listerendezvous/:idmeca', async (req, res) => {
       if (!groupedAppointments[rdvId]) {
         groupedAppointments[rdvId] = {
           _id: rdv._id,
+          _etat: rdv.etat,
           _idrendezvous: rdv._idrendezvous,
           utilisateurs: []
         };
@@ -159,5 +160,22 @@ router.get('/listerendezvous/:idmeca', async (req, res) => {
 });
 
 
+
+
+// PUT /mecarendezvous/update-etat/:idrdv
+router.put('/update-etat/:idrdv', async (req, res) => {
+  try {
+    const { idrdv } = req.params;
+
+    const result = await MecaRendezVous.updateMany(
+      { _idrendezvous: idrdv },
+      { $set: { etat: 1 } }
+    );
+
+    res.status(200).json({ message: 'État mis à jour avec succès', result });
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur serveur', error: err.message });
+  }
+});
 
 module.exports = router;
